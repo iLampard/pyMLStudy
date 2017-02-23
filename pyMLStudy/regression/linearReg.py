@@ -23,7 +23,7 @@ def loadData():
     return data
 
 
-def plotRawData():
+def plotData():
     data = pd.read_csv(_pathDataAdvertising)
     plt.figure(figsize=(9,12))
     plt.subplot(311)
@@ -44,6 +44,7 @@ def plotRawData():
 
 def main():
     data = loadData()
+    plotData()
     y, x = data.labelAndFeature
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=1)
     # print x_train, y_train
