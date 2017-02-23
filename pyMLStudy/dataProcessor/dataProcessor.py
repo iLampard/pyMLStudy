@@ -32,11 +32,11 @@ class DataProcessor(object):
         self._bucketCols = bucketCols
         self._bucketBoundaries = bucketBoundaries
         self._csvFile = csvFile
-
+        self._label, self._feature = self.readData()
 
     def readData(self, csvFile=None):
         """
-        :return:
+        :return: pd.DataFrame, label and fature
         """
         csvFile = self._csvFile if csvFile is None else csvFile
         data = pd.read_csv(csvFile)
@@ -61,4 +61,10 @@ class DataProcessor(object):
         else:
             xBucket = None
 
-        return y, xContinuousNum, xCate, xBucket
+        feature = pd.concat([ xContinuousNum, xCate, xBucket], axis=1)
+        return y, feature
+
+    @property
+    def labelAndFeature(self):
+        return self._label, self._feature
+
