@@ -3,10 +3,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.cross_validation import train_test_split
-from sklearn.grid_search import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Lasso, Ridge
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 from pyMLStudy.dataProcessor import DataProcessor
 from pyMLStudy.enum import RegType
 
@@ -62,14 +67,15 @@ class Regressor(object):
     def regression(self):
         x_train, x_test, y_train, y_test = train_test_split(self._x, self._y, train_size=self._trainSize, random_state=1)
         if self._regType == RegType.LinearReg:
-            linreg = LinearRegression()
-            self._model = linreg.fit(x_train, y_train)
-            print 'Calib params：\n', linreg.coef_
-            print 'Calib intercept:\n', linreg.intercept_
+            self._model = Pipeline([('sc', StandardScaler()), ('reg', LinearRegression())])
+            self._model.fit(x_train, y_train)
+            print 'Calib params：\n', self._model.named_steps['reg'].coef_
+            print 'Calib intercept:\n', self._model.named_steps['reg'].intercept_
         else:
             reg = Lasso() if self._regType == RegType.Lasso else Ridge()
+            pipeline = Pipeline([('sc', StandardScaler()), ('reg', reg)])
             alpha_can = np.logspace(-3, 2, 10)
-            self._model = GridSearchCV(reg, param_grid={'alpha': alpha_can}, cv=5)
+            self._model = GridSearchCV(pipeline, param_grid={'alpha': alpha_can}, cv=5)
             self._model.fit(x_train, y_train)
             print 'Hyper param：\n', self._model.best_params_
 
@@ -91,7 +97,7 @@ def main():
     plotData()
     y, x = data.labelAndFeature
 
-    regressor = Regressor(y=y, x=x, regType=RegType.Ridge)
+    regressor = Regressor(y=y, x=x, regType=RegType.LinearReg)
     regressor.regression()
 
     return

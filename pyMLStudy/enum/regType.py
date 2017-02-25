@@ -9,3 +9,4 @@ class RegType(IntEnum):
     LinearReg = 1
     Lasso = 2
     Ridge = 3
+    LogisticReg = 4
