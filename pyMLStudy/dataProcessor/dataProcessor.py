@@ -3,7 +3,9 @@
 #ref: https://github.com/laisun/mlstudy/blob/master/sklearn/sk_data_reprecessing.py
 
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 from pyMLStudy.utils import bucketEncode
+from pyMLStudy.enum import EncodeType
 
 
 class DataProcessor(object):
@@ -11,39 +13,45 @@ class DataProcessor(object):
                  labelCol,
                  continuousCols,
                  categoricalCols=None,
-                 label2Number=None,
+                 labelEncode=None,
                  bucketCols=None,
                  bucketBoundaries=None,
-                 csvFile=None):
+                 csvFileDict=None):
         """
-        :param labelCols: str, label col name
-        :param continuousCols: list of str - continuous number col names
-        :param categoricalCols: list of str - categorical col names
-        :param label2Number: dict, the mapping of y label str to id. e.g. {'male':0,'female':1 }
-        :param bucketCols: list of str - non-continuous number col names
+        :param labelCols: str/int, label col name
+        :param continuousCols: list of str/int - continuous number col names
+        :param categoricalCols: list of str/int - categorical col names
+        :param labelEncode: enum, indicate the method of mapping of y label str to id. e.g. {'male':0,'female':1 }
+        :param bucketCols: list of str/int - non-continuous number col names
         :param bucketBoundaries: list of list - bucket boundaries for each corresponding col
-        :param csvFile: str, path of csv file
+        :param csvFile: dict, path of csv file
         :return:
         """
         self._categoricalCols = categoricalCols
         self._continuousCols = continuousCols
         self._labelCol = labelCol
-        self._label2Number = label2Number
+        self._labelEncode = labelEncode
         self._bucketCols = bucketCols
         self._bucketBoundaries = bucketBoundaries
-        self._csvFile = csvFile
+        self._csvFileDict = csvFileDict
         self._label, self._feature = self.readData()
 
-    def readData(self, csvFile=None):
+    def readData(self, csvFileDict=None):
         """
         :return: pd.DataFrame, label and fature
         """
-        csvFile = self._csvFile if csvFile is None else csvFile
-        data = pd.read_csv(csvFile)
+        csvFileDict = self._csvFileDict if csvFileDict is None else csvFileDict
+        data = pd.read_csv(csvFileDict['path'],
+                           header=csvFileDict['header'],
+                           delim_whitespace=csvFileDict['delim_whitespace'])
 
         y = data[self._labelCol]
-        if self._label2Number is not None:
-            y = y.apply(lambda x: self._label2Number[x])
+        if self._labelEncode is not None:
+            if self._labelEncode == EncodeType.LabelEncode:
+                le = LabelEncoder()
+                y = le.fit_transform(y)
+            else:
+                raise NotImplementedError
 
         xContinuousNum = data[self._continuousCols]
 
@@ -61,7 +69,7 @@ class DataProcessor(object):
         else:
             xBucket = None
 
-        feature = pd.concat([ xContinuousNum, xCate, xBucket], axis=1)
+        feature = pd.concat([xContinuousNum, xCate, xBucket], axis=1)
         return y, feature
 
     @property
