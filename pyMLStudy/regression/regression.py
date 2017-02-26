@@ -97,7 +97,7 @@ class Regressor(object):
         if xlabel is not None:
             plt.xlabel(xlabel, fontsize=15)
         if ylabel is not None:
-            plt.ylabel(u'房屋价格', fontsize=15)
+            plt.ylabel(ylabel, fontsize=15)
         plt.title(title, fontsize=18)
         plt.grid()
         plt.show()
