@@ -3,11 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
 from pyMLStudy.dataProcessor import loadIrisData
 
 
