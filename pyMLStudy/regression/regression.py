@@ -15,10 +15,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error
-from pyMLStudy.dataProcessor import DataProcessor
 from pyMLStudy.enum import RegType
-from pyMLStudy.enum import EncodeType
-
+from pyMLStudy.dataProcessor import loadAdvertisingData
+from pyMLStudy.dataProcessor import loadBostonData
+from pyMLStudy.dataProcessor import loadIrisData
 
 mpl.rcParams['font.sans-serif'] = [u'simHei']
 mpl.rcParams['axes.unicode_minus'] = False
@@ -27,33 +27,7 @@ _pathAdvertisingData = '..//data//Advertising.csv'
 _pathHousingData = '..//data//housing.data'
 _pathIrisData = '..//data//Iris.data'
 
-def loadAdvertisingData():
-    data = DataProcessor(labelCol='Sales',
-                         continuousCols=['TV', 'Radio', 'Newspaper'],
-                         csvFileDict={'path': _pathAdvertisingData, 'header': 'infer', 'delim_whitespace': False})
 
-    return data
-
-
-def loadIrisData(onlyUseTwoFeat=False):
-    if onlyUseTwoFeat:
-        continuousCols = [0, 1]
-    else:
-        continuousCols = [0, 1, 2, 3]
-
-    data = DataProcessor(labelCol=4,
-                         continuousCols=continuousCols,
-                         labelEncode=EncodeType.LabelEncode,
-                         csvFileDict={'path': _pathIrisData, 'header': None, 'delim_whitespace': False})
-    return data
-
-
-def loadBostonData():
-    continousCols = range(13)
-    data = DataProcessor(labelCol=13,
-                         continuousCols=continousCols,
-                         csvFileDict={'path': _pathHousingData, 'header': None, 'delim_whitespace': True})
-    return data
 
 def plotAdvertisingData():
     data = pd.read_csv(_pathAdvertisingData)
@@ -191,7 +165,7 @@ class Regressor(object):
 
 
 def mainAdvertising():
-    data = loadAdvertisingData()
+    data = loadAdvertisingData(_pathAdvertisingData)
     plotAdvertisingData()
     y, x = data.labelAndFeature
 
@@ -201,7 +175,7 @@ def mainAdvertising():
     return
 
 def mainIris():
-    data = loadIrisData(onlyUseTwoFeat=True)
+    data = loadIrisData(_pathIrisData, onlyUseTwoFeat=True)
     y, x = data.labelAndFeature
 
     regressor = Regressor(y=y, x=x, regType=RegType.LogisticReg)
@@ -211,7 +185,7 @@ def mainIris():
 
 
 def mainBoston():
-    data = loadBostonData()
+    data = loadBostonData(_pathHousingData)
     y, x = data.labelAndFeature
 
     regressor = Regressor(y=y, x=x, regType=RegType.ElasticNet, plotTitle=u'波士顿房价预测')
