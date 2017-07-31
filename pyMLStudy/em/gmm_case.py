@@ -3,7 +3,6 @@
 
 import numpy as np
 from scipy.stats import norm
-from itertools import product
 
 
 def e_step(mu, sigma, a, y):
