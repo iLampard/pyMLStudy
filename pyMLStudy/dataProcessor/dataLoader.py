@@ -32,3 +32,12 @@ def loadBostonData(path):
                          continuousCols=continousCols,
                          csvFileDict={'path': path, 'header': None, 'delim_whitespace': True})
     return data
+
+
+def loadBipartition(path):
+    continuousCol =[0, 1]
+    data = DataProcessor(labelCol=2,
+                         continuousCols=continuousCol,
+                         csvFileDict={'path': path, 'header': None, 'delim_whitespace': True})
+
+    return data
