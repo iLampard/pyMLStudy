@@ -24,22 +24,23 @@ def build_stump(data_mat, labels, D):
         range_min = data_mat[:, i].min()
         range_max = data_mat[:, i].max()
         step_size = (range_max - range_min) / num_step
-        # for j in range(-1, int(num_step)+1):
-        for j in range(0, int(num_step)):
+        for j in range(-1, int(num_step)+1):
+        # for j in range(0, int(num_step)):
             for inequal in ['lt', 'gt']:
                 thresh = range_min + float(j) * step_size
                 pred = stump_classify(data_mat, i, thresh, inequal)
                 err = np.mat(np.ones((nb_row, 1)))
                 err[pred == labels] = 0
                 weight_err = D.T * err
-                print "split: dim %d, thresh % .2f, thresh inequal: %s, the weighted error is %.3f" % (
-                    i, thresh, inequal, weight_err)
+                #print "split: dim %d, thresh % .2f, thresh inequal: %s, the weighted error is %.3f" % (
+                #    i, thresh, inequal, weight_err)
                 if weight_err < min_err:
                     min_err = weight_err
                     best_class = pred.copy()
                     best_stump['dim'] = i
                     best_stump['thresh'] = thresh
                     best_stump['ineq'] = inequal
+                    best_stump['err'] = weight_err
 
     return best_stump, min_err, best_class
 
