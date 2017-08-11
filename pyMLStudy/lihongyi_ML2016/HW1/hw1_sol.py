@@ -38,7 +38,8 @@ def create_feature_mat(hour_size=9):
     # change every mat into 1-d array
     feature = [feature.reshape(-1, 1) for feature in feature_list]
     feature = np.hstack(feature)
-    np.savetxt('feature.csv', feature, delimiter=',')
+    # np.savetxt('feature.csv', feature, delimiter=',')
+    print feature[0, :]
     return feature
 
 
