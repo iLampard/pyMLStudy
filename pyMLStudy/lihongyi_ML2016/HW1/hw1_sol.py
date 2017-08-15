@@ -4,25 +4,6 @@ import numpy as np
 import pandas as pd
 
 
-def readCSV(data_size):
-    data = np.delete(np.transpose(np.genfromtxt("train.csv", delimiter=",")), 0, 1)
-    output = []
-    out_fin = []
-    for i in xrange(0, 3):
-        data = np.delete(data, 0, 0)  # delete non-related infos
-    for i in xrange(0, 24):
-        output.append(np.split(data[i], len(data[i]) / data_size))
-    for i in xrange(0, len(output[0])):
-        for j in xrange(0, 24):
-            out_fin.append(output[j][i])
-    out_fin = np.array(out_fin)
-    out_fin[np.isnan(out_fin)] = 0
-    ##   print "debug nan"
-    ##   print len(out_fin)
-    print out_fin.shape
-    return out_fin
-
-
 def concat_mat(data, nb_feature=18):
     data_by_date = np.vsplit(data, np.arange(0, len(data), nb_feature))
     data_concat = np.hstack(data_by_date[1:])
