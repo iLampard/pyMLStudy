@@ -2,6 +2,9 @@
 
 import numpy as np
 import pandas as pd
+import time
+import csv
+from pyMLStudy.lihongyi_ML2016.HW1.linreg import LinReg
 
 
 def concat_mat(data, nb_feature=18):
@@ -20,7 +23,7 @@ def get_feature_label_mat(data_concat, moving_size, label_row=9):
     return feature, label
 
 
-def create_feature_mat(csv_file='train.csv', hour_size=9):
+def create_feature_mat_train(csv_file='train.csv', hour_size=9):
     data = pd.read_csv(csv_file, header=0)
     del data['Feature']
     data.replace(to_replace='NR', value=0.0, inplace=True)
@@ -45,33 +48,40 @@ def create_feature_mat(csv_file='train.csv', hour_size=9):
     return np.mat(feature), np.mat(label)
 
 
-def gradient(X, Y, w):
-    dw = X.T * X * w - X.T * Y
-    return dw
-
-
-def adagrad(X, Y, w_0, eta_init=0.1, max_int=500):
-    w = w_0
-    eta = eta_init
-    sum_squre_g = 0
-    for i in range(max_int):
-        g = gradient(X, Y, w)
-        sum_squre_g += g ** 2
-        sigma = np.sqrt(sum_squre_g)
-        w = w - eta / sigma * g
-    return w
-
-
-def predict(X, w):
-    return
-
-
-def main():
-    feature, label = create_feature_mat()
-    w = adagrad(X=feature, Y=label, w_0=np.array([0] * feature.shape[1]))
-    print w
-    return
+def create_feature_mat_test(csv_file='test_X.csv', nb_feature=18):
+    data = pd.read_csv(csv_file, header=None)
+    data.replace(to_replace='NR', value=0.0, inplace=True)
+    del data[data.columns[0]]
+    del data[data.columns[0]]
+    data_split = np.vsplit(data, np.arange(0, len(data), nb_feature))
+    data_reshape = [np.ravel(data) for data in data_split[1:]]
+    feature = np.vstack(data_reshape).astype('float')
+    np.savetxt('feature_test.csv', feature, delimiter=',')
+    return feature
 
 
 if __name__ == "__main__":
-    main()
+    # read train data => create feature matrix and label vector
+    feature_train, label_train = create_feature_mat_train()
+    # read test data => create feature matrix
+    feature_test = create_feature_mat_test()
+    # init lin reg model
+    model = LinReg(max_iter=10, method='sgd', scale=True)
+    # train models
+    print 'Training.......'
+    t_start = time.time()
+    model.fit(feature_train, label_train)
+    print 'Done!'
+    print 'Training cost %.3f seconds!' % (time.time() - t_start)
+
+    # make prediction
+    pred = model.predict(feature_test)
+    outputfile = open('kaggle_best.csv', 'wb')
+    csv_output = csv.writer(outputfile)
+
+    csv_output.writerow(['id', 'value'])
+
+    for idx, value in enumerate(pred):
+        csv_output.writerow(['id_' + str(idx), value])
+
+    outputfile.close()
