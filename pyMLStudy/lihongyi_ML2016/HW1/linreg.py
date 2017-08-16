@@ -80,4 +80,5 @@ def gradient(X, y, w):
     w = w.reshape(-1, 1)
     y = y.reshape(-1, 1)
     dw = X.T * X * w - X.T * y
+    dw /= float(len(X))
     return dw
