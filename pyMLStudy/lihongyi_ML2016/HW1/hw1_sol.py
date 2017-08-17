@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import time
 import csv
-from pyMLStudy.lihongyi_ML2016.HW1.linreg import LinReg
+from pyMLStudy.lihongyi_ML2016.HW1.linreg import (gradient_descent_runner,
+                                                  predict)
 
 
 def concat_mat(data, nb_feature=18):
@@ -65,17 +66,17 @@ if __name__ == "__main__":
     feature_train, label_train = create_feature_mat_train()
     # read test data => create feature matrix
     feature_test = create_feature_mat_test()
-    # init lin reg model
-    model = LinReg(max_iter=10, method='sgd', scale=True)
+
     # train models
     print 'Training.......'
     t_start = time.time()
-    model.fit(feature_train, label_train)
+    weight = gradient_descent_runner(feature_train, label_train, method='sgd', num_iter=200000)
     print 'Done!'
     print 'Training cost %.3f seconds!' % (time.time() - t_start)
 
     # make prediction
-    pred = model.predict(feature_test)
+    pred = predict(feature_test, weight)
+    pred = np.array(pred).reshape(-1, ).tolist()
     outputfile = open('kaggle_best.csv', 'wb')
     csv_output = csv.writer(outputfile)
 
