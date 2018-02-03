@@ -6,8 +6,8 @@ from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import matplotlib as mpl
-from pyMLStudy.dataProcessor import loadIrisData
-from pyMLStudy.dataProcessor import loadBipartition
+from pyMLStudy.data_processor import load_iris_data
+from pyMLStudy.data_processor import load_bipartition
 
 mpl.rcParams['font.sans-serif'] = [u'SimHei']
 mpl.rcParams['axes.unicode_minus'] = False
@@ -21,8 +21,8 @@ def show_accuracy(a, b, tip):
 
 
 def bipartition_main():
-    data = loadBipartition(_pathBipartition)
-    y, x = data.labelAndFeature
+    data = load_bipartition(_pathBipartition)
+    y, x = data.label_feature
 
     # 分类器
     clf_param = (('linear', 0.1), ('linear', 0.5), ('linear', 1), ('linear', 2),
@@ -47,8 +47,8 @@ def bipartition_main():
 
 
 def svm_classification():
-    data = loadIrisData(_pathIrisData, onlyUseTwoFeat=False)
-    y, x = data.labelAndFeature
+    data = load_iris_data(_pathIrisData, onlyUseTwoFeat=False)
+    y, x = data.label_feature
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=1, train_size=0.7)
     clf = svm.SVC(C=0.8, kernel='rbf', gamma=20, decision_function_shape='ovr')

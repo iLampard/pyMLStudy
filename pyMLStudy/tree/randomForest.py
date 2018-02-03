@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.ensemble import RandomForestClassifier
-from pyMLStudy.dataProcessor import loadIrisData
+from pyMLStudy.data_processor import load_iris_data
 
 
 mpl.rcParams['font.sans-serif'] = [u'SimHei']
@@ -17,8 +17,8 @@ iris_feature = u'花萼长度', u'花萼宽度', u'花瓣长度', u'花瓣宽度
 
 
 def mainIris():
-    data = loadIrisData(_pathIrisData, onlyUseTwoFeat=False)
-    y, x_prime = data.labelAndFeature
+    data = load_iris_data(_pathIrisData, onlyUseTwoFeat=False)
+    y, x_prime = data.label_feature
     x_prime = x_prime.values
 
     feature_pairs = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]

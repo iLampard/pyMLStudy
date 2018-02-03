@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-from pyMLStudy.dataProcessor import loadIrisData
+from pyMLStudy.data_processor import load_iris_data
 
 
 mpl.rcParams['font.sans-serif'] = [u'SimHei']
@@ -17,8 +17,8 @@ _pathIrisData = '..//data//Iris.data'
 
 
 def mainIris():
-    data = loadIrisData(_pathIrisData, onlyUseTwoFeat=True)
-    y, x = data.labelAndFeature
+    data = load_iris_data(_pathIrisData, onlyUseTwoFeat=True)
+    y, x = data.label_feature
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=1)
     print y_test

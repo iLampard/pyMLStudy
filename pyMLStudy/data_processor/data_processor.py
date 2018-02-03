@@ -1,6 +1,6 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
-#ref: https://github.com/laisun/mlstudy/blob/master/sklearn/sk_data_reprecessing.py
+# ref: https://github.com/laisun/mlstudy/blob/master/sklearn/sk_data_reprecessing.py
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -10,33 +10,33 @@ from pyMLStudy.enum import EncodeType
 
 class DataProcessor(object):
     def __init__(self,
-                 labelCol,
-                 continuousCols,
-                 categoricalCols=None,
-                 labelEncode=None,
-                 bucketCols=None,
-                 bucketBoundaries=None,
-                 csvFileDict=None):
+                 label_col,
+                 continuous_cols,
+                 categorical_cols=None,
+                 label_encode=None,
+                 bucket_cols=None,
+                 bucket_boundaries=None,
+                 csv_dict=None):
         """
         :param labelCols: str/int, label col name
-        :param continuousCols: list of str/int - continuous number col names
-        :param categoricalCols: list of str/int - categorical col names
-        :param labelEncode: enum, indicate the method of mapping of y label str to id. e.g. {'male':0,'female':1 }
-        :param bucketCols: list of str/int - non-continuous number col names
-        :param bucketBoundaries: list of list - bucket boundaries for each corresponding col
+        :param continuous_cols: list of str/int - continuous number col names
+        :param categorical_cols: list of str/int - categorical col names
+        :param label_encode: enum, indicate the method of mapping of y label str to id. e.g. {'male':0,'female':1 }
+        :param bucket_cols: list of str/int - non-continuous number col names
+        :param bucket_boundaries: list of list - bucket boundaries for each corresponding col
         :param csvFile: dict, path of csv file
         :return:
         """
-        self._categoricalCols = categoricalCols
-        self._continuousCols = continuousCols
-        self._labelCol = labelCol
-        self._labelEncode = labelEncode
-        self._bucketCols = bucketCols
-        self._bucketBoundaries = bucketBoundaries
-        self._csvFileDict = csvFileDict
-        self._label, self._feature = self.readData()
+        self._categoricalCols = categorical_cols
+        self._continuousCols = continuous_cols
+        self._labelCol = label_col
+        self._labelEncode = label_encode
+        self._bucketCols = bucket_cols
+        self._bucketBoundaries = bucket_boundaries
+        self._csvFileDict = csv_dict
+        self._label, self._feature = self.read_data()
 
-    def readData(self, csvFileDict=None):
+    def read_data(self, csvFileDict=None):
         """
         :return: pd.DataFrame, label and fature
         """
@@ -73,6 +73,5 @@ class DataProcessor(object):
         return y, feature
 
     @property
-    def labelAndFeature(self):
+    def label_feature(self):
         return self._label, self._feature
-
