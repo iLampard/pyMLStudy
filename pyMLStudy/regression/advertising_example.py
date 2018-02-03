@@ -103,10 +103,10 @@ def lasso():
     plt.figure(facecolor='w')
     plt.plot(t, y_test, 'r-', linewidth=2, label=u'真实数据')
     plt.plot(t, y_hat, 'g-', linewidth=2, label=u'预测数据')
-    plt.title(u'线性回归预测销量', fontsize=18)
+    plt.title(u'Lasso回归预测销量', fontsize=18)
     plt.legend(loc='upper right')
     plt.grid()
     plt.show()
 
 if __name__ == '__main__':
-    linear_regression()
+    lasso()
