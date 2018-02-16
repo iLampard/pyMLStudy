@@ -1,14 +1,13 @@
 # -*- encoding:utf-8 -*-
 
 
-import pandas as pd
 import numpy as np
-from math import exp
 from xutils import CustomLogger
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_moons
 from sklearn.metrics import accuracy_score
 from argcheck import expect_types
+import matplotlib.pyplot as plt
 
 logger = CustomLogger('LogisticRegression', log_file='LogisticRegression.log')
 
@@ -23,36 +22,47 @@ class LogisticReg(object):
 
     """
 
-    def __init__(self):
-        self.max_iteration = 5000
-        self.learning_rate = 0.0001
+    def __init__(self, max_iteration=5000, learning_rate=0.0001):
+        self.max_iteration = max_iteration
+        self.learning_rate = learning_rate
         self.weight = None
 
     @expect_types(x=np.ndarray, y=np.ndarray)
     def fit(self, x, y, method='gd', eps=10e-2):
-        y = y.reshape(-1, 1)
-        iteration = 0
         logger.info('Do the calibration using {0} method'.format(method))
-        num_data = x.shape[0]
-        num_feature = x.shape[1]
-        X = np.concatenate((x, np.ones((num_data, 1))), axis=1)
-        w = np.zeros(num_feature + 1).reshape(-1, 1)
-        error = y - sigmoid(np.mat(X) * w)
-        while iteration < self.max_iteration or max(error) > eps:
-            iteration += 1
-            w += self.learning_rate * np.mat(X).T * error
-            error = y - sigmoid(np.dot(X, w))
+        num_data, num_feature = x.shape
+        labels = np.mat(y).transpose()
 
+        # 加一列常数列
+        X = np.mat(np.concatenate((x, np.ones((num_data, 1))), axis=1))
+        w = np.zeros(num_feature + 1).reshape(-1, 1)
+        for iteration in range(self.max_iteration):
+            error = labels - sigmoid(X * w)
+            error_sum = error.T * error
+            w += self.learning_rate * X.T * error
+            if error_sum[0, 0] < eps:
+                break
+            logger.info('Iteration {0}, error {1}'.format(iteration,
+                                                          error_sum[0, 0]))
         self.weight = w
-        logger.info('Calibration finished: iteration {0} and error {1}'.format(iteration,
-                                                                               error))
+        logger.info('Calibration finished')
 
     @expect_types(x=np.ndarray)
     def predict(self, x):
         if self.weight is not None:
-            exp_wx = exp(np.dot(self.weight, x))
-            proba = exp_wx / (1 + exp_wx)
-            return 1 if proba > 0.5 else 0
+            num_data, num_feature = x.shape
+            X = np.mat(np.concatenate((x, np.ones((num_data, 1))), axis=1))
+            proba = sigmoid(X * self.weight)
+            labels = proba
+            labels[labels > 0.5] = 1
+            labels[labels <= 0.5] = 0
+            return labels
+
+
+def plot_fit():
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    pass
 
 
 if __name__ == '__main__':
@@ -60,6 +70,12 @@ if __name__ == '__main__':
     train_features, test_features, train_labels, test_labels = train_test_split(x,
                                                                                 labels,
                                                                                 test_size=0.33)
-
+    logger.info('Start Training...')
     model = LogisticReg()
     model.fit(train_features, train_labels)
+    logger.info('Traning finished...')
+
+    logger.info('Start Predicting...')
+    test_predict = model.predict(test_features)
+    score = accuracy_score(test_labels, test_predict)
+    logger.info('Predicting accuracy is {0}'.format(score))
