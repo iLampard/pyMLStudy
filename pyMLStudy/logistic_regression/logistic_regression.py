@@ -53,15 +53,43 @@ class LogisticReg(object):
             num_data, num_feature = x.shape
             X = np.mat(np.concatenate((x, np.ones((num_data, 1))), axis=1))
             proba = sigmoid(X * self.weight)
-            labels = proba
+            labels = np.asarray(proba).ravel()
             labels[labels > 0.5] = 1
             labels[labels <= 0.5] = 0
             return labels
 
 
-def plot_fit():
+def plot_fit(weights, test_features, pred_labels):
+
+    # 第一类
+    xcord1 = []
+    ycord1 = []
+    # 第二类
+    xcord2 = []
+    ycord2 = []
+
+    num_data = len(test_features)
+    for i in range(num_data):
+        if pred_labels[i] == 0:
+            xcord1.append(test_features[i][0])
+            ycord1.append(test_features[i][1])
+        else:
+            xcord2.append(test_features[i][0])
+            ycord2.append(test_features[i][1])
+
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    ax.scatter(xcord1, ycord1, s=30, c='red', marker='s')
+    ax.scatter(xcord2, ycord2, s=30, c='green')
+
+    x_min, x_max = test_features[:, 0].min() - .5, test_features[:, 0].max() + .5
+    x = np.arange(x_min, x_max, 0.1)
+    y = (-weights[2] - weights[0] * x) / weights[1]
+    ax.plot(x, y)
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.title('Logsitic Regression')
+    plt.show()
     pass
 
 
@@ -79,3 +107,5 @@ if __name__ == '__main__':
     test_predict = model.predict(test_features)
     score = accuracy_score(test_labels, test_predict)
     logger.info('Predicting accuracy is {0}'.format(score))
+
+    plot_fit(model.weight, test_features, test_predict)
