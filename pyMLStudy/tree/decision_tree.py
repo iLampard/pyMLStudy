@@ -118,8 +118,17 @@ class DecisionTree(object):
         self.tree = create_tree(data_set, method=self.method, feature_names=feature_names)
         return
 
-    def predict(self, x):
-        return
+    def predict(self, x, feature_names):
+        current_feature_split = self.tree.keys()[0]
+        feature_idx = feature_names.index(current_feature_split)
+        tree = self.tree[current_feature_split][x[feature_idx]]
+        while True:
+            if isinstance(tree, str):
+                return tree
+            else:
+                current_feature_split = tree.keys()[0]
+                feature_idx = feature_names.index(current_feature_split)
+                tree = tree[current_feature_split][x[feature_idx]]
 
 
 if __name__ == '__main__':
@@ -160,4 +169,7 @@ if __name__ == '__main__':
 
     dt = DecisionTree()
     dt.fit(features, labels, names)
-    print dt.tree
+
+    test_features = ['young', 'yes', 'no', 'good']
+    test_names = ['years', 'has_job', 'has_house', 'credit']
+    print dt.predict(test_features, test_names)
