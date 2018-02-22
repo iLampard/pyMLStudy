@@ -16,7 +16,7 @@ def calc_entropy(data_set):
 
     for key in label_dict.keys():
         proba = float(label_dict[key]) / num_data
-        entropy -= - proba * np.log2(proba)
+        entropy += - proba * np.log2(proba)
     return entropy
 
 
@@ -50,7 +50,7 @@ def calc_cond_entropy(data_set, feature_idx, feature_values):
     for value in feature_values:
         sub_data_set = split_data_set(data_set, feature_idx, value)
         proba = float(len(sub_data_set)) / len(data_set)
-        entropy -= proba * calc_entropy(sub_data_set)
+        entropy += proba * calc_entropy(sub_data_set)
 
     return entropy
 
