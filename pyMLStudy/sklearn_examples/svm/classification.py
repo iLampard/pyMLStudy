@@ -1,13 +1,12 @@
 # -*- coding:utf-8 -*-
 
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import svm
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import matplotlib as mpl
-from pyMLStudy.data_processor import load_iris_data
-from pyMLStudy.data_processor import load_bipartition
+from sklearn import svm
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+from pyMLStudy.sklearn_examples.data_processor import load_bipartition
+from pyMLStudy.sklearn_examples.data_processor import load_iris_data
 
 mpl.rcParams['font.sans-serif'] = [u'SimHei']
 mpl.rcParams['axes.unicode_minus'] = False

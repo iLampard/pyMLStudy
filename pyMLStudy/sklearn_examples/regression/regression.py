@@ -1,24 +1,24 @@
 # -*- coding:utf-8 -*-
 
-import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import ElasticNetCV
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LassoCV
-from sklearn.linear_model import RidgeCV
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import mean_squared_error
 from pyMLStudy.enum import RegType
-from pyMLStudy.data_processor import load_advertising_data
-from pyMLStudy.data_processor import load_boston_data
-from pyMLStudy.data_processor import load_iris_data
+from sklearn.linear_model import ElasticNetCV
+from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import RidgeCV
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import StandardScaler
+
+from pyMLStudy.sklearn_examples.data_processor import load_advertising_data
+from pyMLStudy.sklearn_examples.data_processor import load_boston_data
+from pyMLStudy.sklearn_examples.data_processor import load_iris_data
 
 mpl.rcParams['font.sans-serif'] = [u'simHei']
 mpl.rcParams['axes.unicode_minus'] = False
