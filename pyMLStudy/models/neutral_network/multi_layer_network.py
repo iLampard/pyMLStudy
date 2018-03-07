@@ -3,7 +3,6 @@
 # ref: https://github.com/pangolulu/neural-network-from-scratch
 
 import numpy as np
-from abc import ABCMeta, abstractmethod
 
 
 class MultiplyGate(object):
@@ -27,6 +26,7 @@ class AddGate(object):
     def backward(w, x, dz):
         db = np.dot()
         return db, dx
+
 
 # Activation function
 class Sigmoid(object):
@@ -60,11 +60,32 @@ class Softmax(object):
 
     @staticmethod
     def loss(x, y):
+        """
+        损失函数： - \sum ln p_i； pi = e^z_i / \sum e^z_i
+        """
+        num_sample = x.shape[0]
         probs = Softmax.predict(x)
-        correct_probs = 0
+        log_probs = - np.log(probs[range(num_sample), y])
+        sum_log_probs = np.sum(log_probs)
+        return 1.0 / num_sample * sum_log_probs
 
-        return
-
+    @staticmethod
+    def diff(x, y):
+        """
+        损失函数对 zi 的偏导数
+        """
+        num_sample = x.shape[0]
+        probs = Softmax.predict(x)
+        probs[range(num_sample), y] -= 1
+        return probs
 
 
 class Model(object):
+    def __init__(self, layer_dim):
+        self.w = []
+        self.b = []
+        for i in range(len(layer_dim) - 1):
+            self.w.append(np.random.randn(layer_dim[i], layer_dim[i + 1]))
+            self.b.append(np.random.randn(layer_dim[i + 1]).reshape(1, layer_dim[i+1]))
+
+
