@@ -6,33 +6,65 @@ import numpy as np
 from abc import ABCMeta, abstractmethod
 
 
-class Gate(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def forward(self, w, x):
-        pass
-
-    @abstractmethod
-    def backward(self, w, x, gradient_next):
-        pass
-
-
-class MultiplyGate(Gate):
-    def forward(self, w, x):
+class MultiplyGate(object):
+    @staticmethod
+    def forward(w, x):
         return np.dot(w, x)
 
-    def backward(self, w, x, gradient_next):
-        pass
+    @staticmethod
+    def backward(w, x, dz):
+        dw = np.dot(x, dz)
+        dx = np.dot()
+        return dw, dx
 
 
-class AddGate(Gate):
-    def forward(self, x, b):
+class AddGate(object):
+    @staticmethod
+    def forward(x, b):
         return x + b
 
-    def backward(self, w, x, gradient_next):
+    @staticmethod
+    def backward(w, x, dz):
         db = np.dot()
         return db, dx
+
+# Activation function
+class Sigmoid(object):
+    @staticmethod
+    def forward(x):
+        return 1.0 / (1.0 + np.exp(-x))
+
+    @staticmethod
+    def backward(x, pd_error):
+        output = Sigmoid.forward(x)
+        return output * (1.0 - output) * pd_error
+
+
+class Tanh(object):
+    @staticmethod
+    def forward(x):
+        return np.tanh(x)
+
+    @staticmethod
+    def backward(x, pd_error):
+        output = Tanh.forward(x)
+        return (1.0 - np.square(output)) * pd_error
+
+
+# Output
+class Softmax(object):
+    @staticmethod
+    def predict(x):
+        exp_scores = np.exp(x)
+        return exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+    @staticmethod
+    def loss(x, y):
+        probs = Softmax.predict(x)
+        correct_probs = 0
+
+        return
+
+
+
+class Model(object):
