@@ -1,4 +1,5 @@
 # https://blog.csdn.net/u013082989/article/details/73469095
+# https://blog.csdn.net/liuchonge/article/details/70809288
 
 import numpy as np
 import tensorflow as tf
